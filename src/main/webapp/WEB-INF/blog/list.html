@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="/layout :: head">
+    <title>List Blog</title>
+</head>
+<body>
+<h3>Blog</h3>
+<p>
+    <a th:href="@{/blogs/create}">
+        Add new Blog
+    </a>
+</p>
+<p>
+    <a th:href="@{/categories}">
+        Category
+    </a>
+</p>
+<div style="margin-bottom: 10px; margin-left: 110px">
+    <form th:action="@{/blogs/search}" method="Get">
+        <label><input type="text" name="search" th:value="${search}"></label>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+<div class="notify">
+    <div th:if="${message}">
+        <span th:text="${message}"></span>
+    </div>
+</div>
+
+<table id = "blog">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Category</th>
+        <th>Update</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c,cStatus : ${blogs}">
+        <td th:text="${cStatus.count}"></td>
+        <td th:text="${c.title}"></td>
+        <td th:text="${c.content}"></td>
+        <td th:text="${c.category.getName()}"></td>
+        <td><a th:href="@{/blogs/update/{id}(id=${c.id})}">update</a></td>
+        <td><a th:href="@{/blogs/delete/{id}(id=${c.id})}">delete</a></td>
+    </tr>
+    </tbody>
+
+</table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item" th:classappend="${!blogs.hasPrevious()} ? 'disabled'">
+            <a class="page-link" th:href="@{/blogs/search(page=${blogs.number - 1}, search=${search})}">«</a>
+        </li>
+        <li class="page-item" th:each="i : ${#numbers.sequence(1, blogs.totalPages)}" th:classappend="${blogs.number + 1 == i} ? 'active'">
+            <a class="page-link" th:text="${i}" th:href="@{/blogs/search(page=${i - 1}, search=${search})}">1</a>
+        </li>
+        <li class="page-item" th:classappend="${!blogs.hasNext()} ? 'disabled'">
+            <a class="page-link" th:href="@{/blogs/search(page=${blogs.number + 1}, search=${search})}">»</a>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>
